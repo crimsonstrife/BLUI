@@ -4,8 +4,11 @@ using System;
 
 public class BluLoader : ModuleRules
 {
-	public BluLoader(TargetInfo Target)
-	{
+	public BluLoader(ReadOnlyTargetRules Target) : base(Target)
+    {
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+		PrivatePCHHeaderFile = "Private/BluLoaderPrivatePCH.h";
+
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 		{

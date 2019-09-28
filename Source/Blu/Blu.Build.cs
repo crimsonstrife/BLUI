@@ -15,12 +15,14 @@ public class Blu : ModuleRules
 	{
 		foreach (var f in filesToStage)
 		{
-			RuntimeDependencies.Add(new RuntimeDependency(f));
+			RuntimeDependencies.Add(f);
 		}
 	}
 
-	public Blu(TargetInfo Target)
+	public Blu(ReadOnlyTargetRules Target) : base(Target)
 	{
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+		PrivatePCHHeaderFile = "Private/BluPrivatePCH.h";
 
 		PublicDependencyModuleNames.AddRange(
 			new string[]
@@ -39,7 +41,7 @@ public class Blu : ModuleRules
 
 		PrivateIncludePaths.AddRange(
 			new string[] {
-				"Blu/Private",
+				Path.Combine(ModuleDirectory, "Private"),
 			});
 
 		if(Target.Platform == UnrealTargetPlatform.Win64)
@@ -94,7 +96,7 @@ public class Blu : ModuleRules
 			filesToStage = Directory.GetFiles(Path.Combine(ThirdPartyPath, "cef/Mac/lib"), "*", SearchOption.AllDirectories);
 			stageFiles(filesToStage);
 
-			if(!UEBuildConfiguration.bBuildEditor)
+			if(!Target.bBuildEditor)
 			{
 				AdditionalBundleResources.Add(new UEBuildBundleResource(Path.Combine(frameworkPath, "Chromium Embedded Framework"), "MacOS", false));
 			}
